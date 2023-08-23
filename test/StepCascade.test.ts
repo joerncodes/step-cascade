@@ -42,15 +42,14 @@ describe("StepCascade", () => {
   });
 
   describe("async steps", () => {
-    it("will correctly resolve promises", async() => {
+    it("will correctly resolve promises", async () => {
       cascade
         .addStep(new AsyncStep("Timer done"))
-        .addStep(new MessageStep("Done"))
+        .addStep(new MessageStep("Done"));
 
       const result = await cascade.run(payload);
       expect(result.messages[0]).toBe("Timer done");
       expect(result.messages[1]).toBe("Done");
-
     });
   });
 
