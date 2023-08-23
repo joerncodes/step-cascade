@@ -2,6 +2,7 @@ import StepCascade from "../StepCascade";
 import MessageStep from "./fixtures/MessageStep";
 import ThrowingStep from "./fixtures/ThrowingStep";
 import StringArrayPayload from "./fixtures/StringArrayPayload";
+import AsyncStep from "./fixtures/AsyncStep";
 
 describe("StepCascade", () => {
   let payload: StringArrayPayload;
@@ -37,6 +38,19 @@ describe("StepCascade", () => {
         .run(payload);
       expect(result.messages[0]).toBe("Hello world!");
       expect(result.messages[1]).toBe("¡Hola mundo!");
+    });
+  });
+
+  describe("async steps", () => {
+    it("will correctly resolve promises", async() => {
+      cascade
+        .addStep(new AsyncStep("Timer done"))
+        .addStep(new MessageStep("Done"))
+
+      const result = await cascade.run(payload);
+      expect(result.messages[0]).toBe("Timer done");
+      expect(result.messages[1]).toBe("Done");
+
     });
   });
 
