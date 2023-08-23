@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "prepack": "rm *.js && npm run build && npm test"
   },
   "dependencies": {
     "husky": "^8.0.3",
