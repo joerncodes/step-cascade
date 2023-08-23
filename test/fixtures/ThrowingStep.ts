@@ -1,4 +1,4 @@
-import AbstractCascadingStep from "../../src/step/AbstractCascadingStep";
+import AbstractCascadingStep from "../../step/AbstractCascadingStep";
 import StringArrayPayload from "./StringArrayPayload";
 
 export default class ThrowingStep extends AbstractCascadingStep<StringArrayPayload> {

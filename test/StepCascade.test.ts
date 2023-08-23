@@ -1,4 +1,4 @@
-import StepCascade from "../src/StepCascade";
+import StepCascade from "../StepCascade";
 import MessageStep from "./fixtures/MessageStep";
 import ThrowingStep from "./fixtures/ThrowingStep";
 import StringArrayPayload from "./fixtures/StringArrayPayload";
