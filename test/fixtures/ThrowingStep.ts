@@ -9,7 +9,7 @@ export default class ThrowingStep extends AbstractCascadingStep<StringArrayPaylo
     this.message = message;
   }
 
-  run(payload: StringArrayPayload): StringArrayPayload {
+  async run(payload: StringArrayPayload): Promise<StringArrayPayload> {
     throw new Error(this.message);
   }
 }

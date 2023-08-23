@@ -5,4 +5,3 @@ test
 .prettierrc
 jest.config.js
 tsconfig.json
-*.ts

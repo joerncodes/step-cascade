@@ -3,7 +3,8 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "target": "ESNext",
-    "strict": true
+    "strict": true,
+    "sourceMap": true
   },
   "exclude": ["test"]
 }

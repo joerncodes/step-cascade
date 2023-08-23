@@ -9,7 +9,7 @@ export default class MessageStep extends AbstractCascadingStep<StringArrayPayloa
     this.message = message;
   }
 
-  run(payload: StringArrayPayload): StringArrayPayload {
+  async run(payload: StringArrayPayload): Promise<StringArrayPayload> {
     payload.messages.push(this.message);
     return payload;
   }

@@ -30,9 +30,11 @@ export default class StepCascade<T> {
   async run(payload: T): Promise<T> {
     let result: T = payload;
 
-    this.steps.forEach((step) => {
-      result = step.run(result);
-    });
+    const promises: Promise<T>[] = [];
+
+    for (const step of this.steps) {
+      result = await step.run(result);
+    }
 
     return result;
   }

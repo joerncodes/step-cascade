@@ -1,12 +1,12 @@
 {
   "name": "step-cascade",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "prepack": "rm *.js && npm run build && npm test"
+    "prepack": "npm run build"
   },
   "dependencies": {
     "husky": "^8.0.3",
