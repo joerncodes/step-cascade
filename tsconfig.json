@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "strict": true,
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "exclude": ["test"]
+}
