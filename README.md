@@ -8,9 +8,9 @@ Let's say we have a payload like this:
 
 ```typescript
 type User = {
-    firstname: string;
-    lastname: string;
-}
+  firstname: string;
+  lastname: string;
+};
 ```
 
 Then we can write steps that are typed to this payload:
@@ -35,12 +35,19 @@ We can then use the StepCascade to add those steps and have them manipulate the 
 
 ```typescript
 const cascade = new StepCascade<User>()
-    .addStep(new FirstnameStep())
-    .addStep(new LastnameStep());
+  .addStep(new FirstnameStep())
+  .addStep(new LastnameStep());
 
 const result = await cascade.run({} as User);
 
 console.log(result.firstname); // Solaire
-console.log(result.lastname); // of Astora 
-
+console.log(result.lastname); // of Astora
 ```
+
+## Testing
+
+Simply run "npm test".
+
+## Contribution
+
+Pull Requests are more than welcome!

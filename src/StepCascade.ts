@@ -4,7 +4,7 @@ import AbstractCascadingStep from "./step/AbstractCascadingStep";
  * The StepCascade is a generic class typed to a specific payload type
  * and can be used to take one payload from one "Step" to the next, producing
  * a collaborative result.
- * 
+ *
  * @author Joern Meyer <https://joern.url.lol/🧑‍💻>
  */
 export default class StepCascade<T> {
@@ -12,9 +12,9 @@ export default class StepCascade<T> {
 
   /**
    * Add a step to the cascade.
-   * 
-   * @param step 
-   * @returns 
+   *
+   * @param step
+   * @returns
    */
   addStep(step: AbstractCascadingStep<T>): StepCascade<T> {
     this.steps.push(step);
@@ -23,9 +23,9 @@ export default class StepCascade<T> {
 
   /**
    * Pass the payload to all steps in turn.
-   * 
-   * @param payload 
-   * @returns 
+   *
+   * @param payload
+   * @returns
    */
   async run(payload: T): Promise<T> {
     let result: T = payload;

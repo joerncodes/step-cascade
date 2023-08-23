@@ -7,10 +7,10 @@ describe("StepCascade", () => {
   let payload: StringArrayPayload;
   let cascade: StepCascade<StringArrayPayload>;
 
-    beforeEach(() => {
-      payload = { messages: [] };
-      cascade = new StepCascade<StringArrayPayload>();
-    });
+  beforeEach(() => {
+    payload = { messages: [] };
+    cascade = new StepCascade<StringArrayPayload>();
+  });
 
   describe("adding steps", () => {
     it("can add a step to the cascade", async () => {
@@ -44,17 +44,17 @@ describe("StepCascade", () => {
     const messageStepSpy = jest.spyOn(MessageStep.prototype, "run");
 
     beforeEach(() => {
-        messageStepSpy.mockClear();
+      messageStepSpy.mockClear();
     });
     it("will fail if ONE STEP in the cascade fails", async () => {
-        cascade
-            .addStep(new ThrowingStep("Error"))
-            .addStep(new MessageStep("I will never trigger"));
+      cascade
+        .addStep(new ThrowingStep("Error"))
+        .addStep(new MessageStep("I will never trigger"));
 
-        expect(async () => {
-           await cascade.run(payload)
-        }).rejects.toThrow();
-        expect(messageStepSpy).not.toHaveBeenCalled();
+      expect(async () => {
+        await cascade.run(payload);
+      }).rejects.toThrow();
+      expect(messageStepSpy).not.toHaveBeenCalled();
     });
   });
 });
