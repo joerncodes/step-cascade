@@ -19,7 +19,7 @@ export default class StepCascade<T> {
    * @returns
    */
   addStep(stepDescription: TStepDescription<T>): StepCascade<T> {
-    if(!stepDescription.key) {
+    if (!stepDescription.key) {
       stepDescription.key = stepDescription.step.constructor.name;
     }
 
@@ -27,7 +27,10 @@ export default class StepCascade<T> {
     return this;
   }
 
-  addStepAfter(key: string, stepDescription: TStepDescription<T>): StepCascade<T> {
+  addStepAfter(
+    key: string,
+    stepDescription: TStepDescription<T>
+  ): StepCascade<T> {
     const index = this.findStepIndex(key);
 
     if (index !== -1) {
@@ -39,7 +42,10 @@ export default class StepCascade<T> {
     return this;
   }
 
-  addStepBefore(key: string, stepDescription: TStepDescription<T>): StepCascade<T> {
+  addStepBefore(
+    key: string,
+    stepDescription: TStepDescription<T>
+  ): StepCascade<T> {
     const index = this.findStepIndex(key);
 
     if (index !== -1) {
@@ -57,16 +63,22 @@ export default class StepCascade<T> {
   }
 
   addStepNext(stepDescription: TStepDescription<T>): StepCascade<T> {
-    return this.currentKey ? this.addStepAfter(this.currentKey, stepDescription) : this.addStepFirst(stepDescription);
+    return this.currentKey
+      ? this.addStepAfter(this.currentKey, stepDescription)
+      : this.addStepFirst(stepDescription);
   }
 
   findStepIndex(key: string): number {
-    return this.stepDescriptions.findIndex((description) => { return key === description.key });
+    return this.stepDescriptions.findIndex((description) => {
+      return key === description.key;
+    });
   }
 
   findStep(key: string): AbstractCascadingStep<T> | undefined {
-    const description = this.stepDescriptions.find((description) => { return key === description.key });
-    if(!description) {
+    const description = this.stepDescriptions.find((description) => {
+      return key === description.key;
+    });
+    if (!description) {
       return;
     }
 
@@ -81,8 +93,6 @@ export default class StepCascade<T> {
    */
   async run(payload: T): Promise<T> {
     let result: T = payload;
-
-    const promises: Promise<T>[] = [];
 
     for (const stepDescription of this.stepDescriptions) {
       const { key, step } = stepDescription;

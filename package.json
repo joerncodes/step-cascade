@@ -1,21 +1,29 @@
 {
   "name": "step-cascade",
-  "version": "1.0.7",
-  "main": "index.js",
+  "version": "2.0.0",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "prepack": "npm run build"
+    "prepack": "yarn build && yarn test",
+    "eslint:fix": "eslint --fix"
   },
   "dependencies": {
     "husky": "^8.0.3",
     "jest": "^29.6.3",
+    "lint-staged": "^14.0.1",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
   },
   "devDependencies": {
+    "@types/eslint": "8.44.2",
     "@types/jest": "^29.5.4",
+    "@typescript-eslint/eslint-plugin": "6.4.1",
+    "@typescript-eslint/parser": "6.4.1",
+    "eslint": "8.47.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.28.1",
+    "eslint-plugin-prettier": "5.0.0",
     "prettier": "^3.0.2"
   },
   "engines": {
