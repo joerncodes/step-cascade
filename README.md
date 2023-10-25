@@ -1,6 +1,15 @@
-# StepCascade
+# StepCascade <!-- omit in toc -->
 
 This is a small collection of classes which can be used to build a chain of "steps" all manipulating a common payload object.
+
+## Table of Contents <!-- omit in toc -->
+
+- [Usage](#usage)
+  - [Error Handling](#error-handling)
+    - [Recoverable Errors by Step](#recoverable-errors-by-step)
+    - [Recoverable Errors by Cascade](#recoverable-errors-by-cascade)
+- [Testing](#testing)
+- [Contribution](#contribution)
 
 ## Usage
 
