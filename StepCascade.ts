@@ -19,6 +19,8 @@ export default class StepCascade<T> {
   };
   protected recoverableCallback: TRecoverableCallback = async () => {};
 
+  protected currentStepDescription: TStepDescription<T> | null = null;
+
   /**
    * Provide a different function that can identify whether or not an error is recoverable.
    * @param identify TIdentifyRecoverableError
@@ -102,6 +104,10 @@ export default class StepCascade<T> {
     return description.step;
   }
 
+  getCurrentStepDescription(): TStepDescription<T> | null {
+    return this.currentStepDescription;
+  }
+
   /**
    * Pass the payload to all steps in turn.
    *
@@ -113,6 +119,7 @@ export default class StepCascade<T> {
     let shouldRepeat;
 
     for (const stepDescription of this.stepDescriptions) {
+      this.currentStepDescription = stepDescription;
       shouldRepeat = true;
       const { key, step } = stepDescription;
       this.currentKey = key;

@@ -8,6 +8,8 @@ import RecoverableThrowingStep from "./fixtures/RecoverableThrowingStep";
 import TIdentifyRecoverableError from "../TIdentifyRecoverableError";
 import StepError from "../step/StepError";
 import TRecoverableCallback from "../TRecoverableCallback";
+import AbstractCascadingStep from "../step/AbstractCascadingStep";
+import { isEmptyBindingElement } from "typescript";
 
 describe("StepCascade", () => {
   let payload: StringArrayPayload;
@@ -137,6 +139,17 @@ describe("StepCascade", () => {
 
       expect(result.messages[0]).toBe("First message");
       expect(result.messages[1]).toBe("Second message");
+    });
+  });
+
+  describe("getCurrentStepDescription()", () => {
+    it("can get the current step description", async () => {
+      await cascade
+        .addStep({ key: "first-message", step: new MessageStep("First message") })
+        .addStep({ key: "last-message", step: new MessageStep("Last message") })
+        .run(payload);
+
+      expect(cascade.getCurrentStepDescription()?.key).toBe("last-message");
     });
   });
 
