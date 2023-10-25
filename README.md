@@ -8,6 +8,7 @@ This is a small collection of classes which can be used to build a chain of "ste
   - [Error Handling](#error-handling)
     - [Recoverable Errors by Step](#recoverable-errors-by-step)
     - [Recoverable Errors by Cascade](#recoverable-errors-by-cascade)
+    - [Recoverable Callbacks](#recoverable-callbacks)
 - [Testing](#testing)
 - [Contribution](#contribution)
 
@@ -86,6 +87,17 @@ stepCascade.setIdentifyRecoverableErrorFunction(recover);
 ```
 
 If the function returns true, the `StepCascade` will retry the current step, regardless of *which* step it is.
+
+#### Recoverable Callbacks
+
+If the error is recoverable, the `StepCascade` will call a callback function you can provide with the `setRecoverableCallback` function. This is typically used to ask the user if they want to try again.
+
+```typescript
+stepCascade.setRecoverableCallback((error: any) => {
+  console.log("An error occured, do you want to try again?");
+  /* user input */
+});
+```
 
 ## Testing
 

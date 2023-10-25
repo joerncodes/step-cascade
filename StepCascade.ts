@@ -1,4 +1,5 @@
 import TIdentifyRecoverableError from "./TIdentifyRecoverableError";
+import TRecoverableCallback from "./TRecoverableCallback";
 import AbstractCascadingStep from "./step/AbstractCascadingStep";
 import StepError from "./step/StepError";
 import TStepDescription from "./step/TStepDescription";
@@ -18,6 +19,7 @@ export default class StepCascade<T> {
   ) => {
     return false;
   };
+  protected recoverableCallback: TRecoverableCallback = (error: any) => {};
 
   /**
    * Provide a different function that can identify whether or not an error is recoverable.
@@ -25,6 +27,16 @@ export default class StepCascade<T> {
    */
   setIdentifyRecoverableErrorFunction(identify: TIdentifyRecoverableError) {
     this.identifyRecoverableError = identify;
+  }
+
+  /**
+   * Provide a callback function that gets called when the error is recoverable.
+   * Typically used to ask the user if they want to try again.
+   *
+   * @param callback TRecoverableCallback
+   */
+  setRecoverableCallback(callback: TRecoverableCallback) {
+    this.recoverableCallback = callback;
   }
 
   /**
@@ -127,6 +139,7 @@ export default class StepCascade<T> {
           ) {
             throw wrappedError;
           }
+          this.recoverableCallback(error);
         }
       }
     }

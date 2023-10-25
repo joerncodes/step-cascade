@@ -7,6 +7,7 @@ import AsyncStep from "./fixtures/AsyncStep";
 import RecoverableThrowingStep from "./fixtures/RecoverableThrowingStep";
 import TIdentifyRecoverableError from "../TIdentifyRecoverableError";
 import StepError from "../step/StepError";
+import TRecoverableCallback from "../TRecoverableCallback";
 
 describe("StepCascade", () => {
   let payload: StringArrayPayload;
@@ -201,6 +202,24 @@ describe("StepCascade", () => {
         }).rejects.toThrow();
 
         expect(throwingStepSpy).toHaveBeenCalledTimes(2);
+      });
+      it("the cascade can have a callback that gets called when an error is recoverable", () => {
+        let recoverCounter = 0;
+        const recoverableThrowingStepSpy = jest.spyOn(
+          RecoverableThrowingStep.prototype,
+          "run"
+        );
+        cascade.addStep({ step: new RecoverableThrowingStep("Error") });
+        const recoverCallback: TRecoverableCallback = (error: any) => {
+          recoverCounter++;
+        };
+        cascade.setRecoverableCallback(recoverCallback);
+
+        expect(async () => {
+          await cascade.run(payload);
+        }).rejects.toThrow();
+
+        expect(recoverCounter).toBe(1);
       });
     });
   });
