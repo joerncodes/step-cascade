@@ -19,11 +19,7 @@ export default class StepCascade<T> {
   ) => {
     return false;
   };
-  protected recoverableCallback: TRecoverableCallback = async (
-    error: any
-  ): Promise<any> => {
-    return true;
-  };
+  protected recoverableCallback: TRecoverableCallback = async () => {};
 
   /**
    * Provide a different function that can identify whether or not an error is recoverable.
@@ -143,7 +139,7 @@ export default class StepCascade<T> {
           ) {
             throw wrappedError;
           }
-          this.recoverableCallback(error).then(() => (shouldRepeat = true));
+          await this.recoverableCallback(wrappedError);
         }
       }
     }

@@ -182,10 +182,12 @@ describe("StepCascade", () => {
         );
         cascade.addStep({ step: new RecoverableThrowingStep("Error") });
 
-        expect(async () => {
+        expect.assertions(1);
+        try {
           await cascade.run(payload);
-        }).rejects.toThrow();
-        expect(recoverableThrowingStepSpy).toHaveBeenCalledTimes(2);
+        } catch (e: any) {
+          expect(recoverableThrowingStepSpy).toHaveBeenCalledTimes(2);
+        }
       });
       it("the cascade can also provide a function that identifies recoverable errors", async () => {
         const throwingStepSpy = jest.spyOn(ThrowingStep.prototype, "run");
@@ -197,13 +199,18 @@ describe("StepCascade", () => {
         cascade.setIdentifyRecoverableErrorFunction(recover);
         cascade.addStep({ step: new ThrowingStep("Error") });
 
-        expect(async () => {
+        expect.assertions(1);
+        try {
           await cascade.run(payload);
-        }).rejects.toThrow();
-
-        expect(throwingStepSpy).toHaveBeenCalledTimes(2);
+        } catch (e: any) {
+          expect(throwingStepSpy).toHaveBeenCalledTimes(2);
+        }
       });
       it("the cascade can have a callback that gets called when an error is recoverable", async () => {
+        const recoverableThrowingStepSpy = jest.spyOn(
+          RecoverableThrowingStep.prototype,
+          "run"
+        );
         let recoverCounter = 0;
         jest.spyOn(RecoverableThrowingStep.prototype, "run");
         cascade.addStep({ step: new RecoverableThrowingStep("Error") });
@@ -213,11 +220,13 @@ describe("StepCascade", () => {
         };
         cascade.setRecoverableCallback(recoverCallback);
 
-        expect(async () => {
+        expect.assertions(2);
+        try {
           await cascade.run(payload);
-        }).rejects.toThrow();
-
-        expect(recoverCounter).toBe(1);
+        } catch (e: any) {
+          expect(recoverableThrowingStepSpy).toHaveBeenCalledTimes(2);
+          expect(recoverCounter).toBe(1);
+        }
       });
     });
   });
