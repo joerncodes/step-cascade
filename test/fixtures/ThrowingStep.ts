@@ -11,10 +11,7 @@ export default class ThrowingStep extends AbstractCascadingStep<StringArrayPaylo
     this.message = message;
   }
 
-  run(
-    stepCascade: StepCascade<StringArrayPayload>,
-    payload: StringArrayPayload
-  ): Promise<StringArrayPayload> {
+  run(stepCascade: StepCascade<StringArrayPayload>, payload: StringArrayPayload): Promise<StringArrayPayload> {
     throw new Error(this.message);
   }
 }

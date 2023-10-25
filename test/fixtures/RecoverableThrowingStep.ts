@@ -6,7 +6,7 @@ export default class RecoverableThrowingStep extends ThrowingStep {
   identifyRecoverableError(error: any): boolean {
     return this.i++ == 0;
   }
-  
+
   reset() {
     this.i = 0;
   }

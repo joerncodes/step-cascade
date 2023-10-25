@@ -10,10 +10,7 @@ export default class AsyncStep extends AbstractCascadingStep<StringArrayPayload>
     this.message = message;
   }
 
-  run(
-    stepCascade: StepCascade<StringArrayPayload>,
-    payload: StringArrayPayload
-  ): Promise<StringArrayPayload> {
+  run(stepCascade: StepCascade<StringArrayPayload>, payload: StringArrayPayload): Promise<StringArrayPayload> {
     return new Promise((resolve) => {
       setTimeout(() => {
         payload.messages.push(this.message);

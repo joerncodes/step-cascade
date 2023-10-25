@@ -14,9 +14,7 @@ import TStepDescription from "./step/TStepDescription";
 export default class StepCascade<T> {
   protected currentKey: string | undefined;
   protected stepDescriptions: TStepDescription<T>[] = [];
-  protected identifyRecoverableError: TIdentifyRecoverableError = (
-    error: any
-  ) => {
+  protected identifyRecoverableError: TIdentifyRecoverableError = (error: any) => {
     return false;
   };
   protected recoverableCallback: TRecoverableCallback = async () => {};
@@ -54,10 +52,7 @@ export default class StepCascade<T> {
     return this;
   }
 
-  addStepAfter(
-    key: string,
-    stepDescription: TStepDescription<T>
-  ): StepCascade<T> {
+  addStepAfter(key: string, stepDescription: TStepDescription<T>): StepCascade<T> {
     const index = this.findStepIndex(key);
 
     if (index !== -1) {
@@ -69,10 +64,7 @@ export default class StepCascade<T> {
     return this;
   }
 
-  addStepBefore(
-    key: string,
-    stepDescription: TStepDescription<T>
-  ): StepCascade<T> {
+  addStepBefore(key: string, stepDescription: TStepDescription<T>): StepCascade<T> {
     const index = this.findStepIndex(key);
 
     if (index !== -1) {
@@ -90,9 +82,7 @@ export default class StepCascade<T> {
   }
 
   addStepNext(stepDescription: TStepDescription<T>): StepCascade<T> {
-    return this.currentKey
-      ? this.addStepAfter(this.currentKey, stepDescription)
-      : this.addStepFirst(stepDescription);
+    return this.currentKey ? this.addStepAfter(this.currentKey, stepDescription) : this.addStepFirst(stepDescription);
   }
 
   findStepIndex(key: string): number {
@@ -133,10 +123,7 @@ export default class StepCascade<T> {
           shouldRepeat = false;
         } catch (error: any) {
           const wrappedError = new StepError<T>(error.message, stepDescription);
-          if (
-            !this.identifyRecoverableError(wrappedError) &&
-            !step.identifyRecoverableError(wrappedError)
-          ) {
+          if (!this.identifyRecoverableError(wrappedError) && !step.identifyRecoverableError(wrappedError)) {
             throw wrappedError;
           }
           await this.recoverableCallback(wrappedError);
