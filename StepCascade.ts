@@ -1,4 +1,6 @@
+import TIdentifyRecoverableError from "./TIdentifyRecoverableError";
 import AbstractCascadingStep from "./step/AbstractCascadingStep";
+import StepError from "./step/StepError";
 import TStepDescription from "./step/TStepDescription";
 
 /**
@@ -11,6 +13,19 @@ import TStepDescription from "./step/TStepDescription";
 export default class StepCascade<T> {
   protected currentKey: string | undefined;
   protected stepDescriptions: TStepDescription<T>[] = [];
+  protected identifyRecoverableError: TIdentifyRecoverableError = (
+    error: any
+  ) => {
+    return false;
+  };
+
+  /**
+   * Provide a different function that can identify whether or not an error is recoverable.
+   * @param identify TIdentifyRecoverableError
+   */
+  setIdentifyRecoverableErrorFunction(identify: TIdentifyRecoverableError) {
+    this.identifyRecoverableError = identify;
+  }
 
   /**
    * Add a step to the cascade.
@@ -93,12 +108,27 @@ export default class StepCascade<T> {
    */
   async run(payload: T): Promise<T> {
     let result: T = payload;
+    let shouldRepeat;
 
     for (const stepDescription of this.stepDescriptions) {
+      shouldRepeat = true;
       const { key, step } = stepDescription;
       this.currentKey = key;
 
-      result = await step.run(this, result);
+      while (shouldRepeat) {
+        try {
+          result = await step.run(this, result);
+          shouldRepeat = false;
+        } catch (error: any) {
+          const wrappedError = new StepError<T>(error.message, stepDescription);
+          if (
+            !this.identifyRecoverableError(wrappedError) &&
+            !step.identifyRecoverableError(wrappedError)
+          ) {
+            throw wrappedError;
+          }
+        }
+      }
     }
 
     return result;

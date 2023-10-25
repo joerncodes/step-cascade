@@ -4,6 +4,9 @@ import QueueingStep from "./fixtures/QueuingStep";
 import ThrowingStep from "./fixtures/ThrowingStep";
 import StringArrayPayload from "./fixtures/StringArrayPayload";
 import AsyncStep from "./fixtures/AsyncStep";
+import RecoverableThrowingStep from "./fixtures/RecoverableThrowingStep";
+import TIdentifyRecoverableError from "../TIdentifyRecoverableError";
+import StepError from "../step/StepError";
 
 describe("StepCascade", () => {
   let payload: StringArrayPayload;
@@ -141,20 +144,64 @@ describe("StepCascade", () => {
   });
 
   describe("error handling", () => {
-    const messageStepSpy = jest.spyOn(MessageStep.prototype, "run");
+    describe("normal error handling", () => {
+      const messageStepSpy = jest.spyOn(MessageStep.prototype, "run");
 
-    beforeEach(() => {
-      messageStepSpy.mockClear();
+      beforeEach(() => {
+        messageStepSpy.mockClear();
+      });
+      it("will fail if ONE STEP in the cascade fails", async () => {
+        cascade
+          .addStep({ step: new ThrowingStep("Error") })
+          .addStep({ step: new MessageStep("I will never trigger") });
+
+        expect(async () => {
+          await cascade.run(payload);
+        }).rejects.toThrow();
+        expect(messageStepSpy).not.toHaveBeenCalled();
+      });
+      it("will wrap the original error in a StepError", async () => {
+        cascade.addStep({ key: "test", step: new ThrowingStep("Error") });
+        try {
+          await cascade.run(payload);
+        } catch (error: any) {
+          expect(Object.getPrototypeOf(error)).toBe(StepError.prototype);
+          expect(
+            (error as StepError<StringArrayPayload>).stepDescription.key
+          ).toBe("test");
+        }
+      });
     });
-    it("will fail if ONE STEP in the cascade fails", async () => {
-      cascade
-        .addStep({ step: new ThrowingStep("Error") })
-        .addStep({ step: new MessageStep("I will never trigger") });
+    describe("recoverable error handling", () => {
+      beforeEach(jest.clearAllMocks);
+      it("steps can provide a function that identifies recoverable errors", () => {
+        const recoverableThrowingStepSpy = jest.spyOn(
+          RecoverableThrowingStep.prototype,
+          "run"
+        );
+        cascade.addStep({ step: new RecoverableThrowingStep("Error") });
 
-      expect(async () => {
-        await cascade.run(payload);
-      }).rejects.toThrow();
-      expect(messageStepSpy).not.toHaveBeenCalled();
+        expect(async () => {
+          await cascade.run(payload);
+        }).rejects.toThrow();
+        expect(recoverableThrowingStepSpy).toHaveBeenCalledTimes(2);
+      });
+      it("the cascade can also provide a function that identifies recoverable errors", () => {
+        const throwingStepSpy = jest.spyOn(ThrowingStep.prototype, "run");
+
+        let i = 0;
+        const recover: TIdentifyRecoverableError = (error: any) => {
+          return i++ == 0;
+        };
+        cascade.setIdentifyRecoverableErrorFunction(recover);
+        cascade.addStep({ step: new ThrowingStep("Error") });
+
+        expect(async () => {
+          await cascade.run(payload);
+        }).rejects.toThrow();
+
+        expect(throwingStepSpy).toHaveBeenCalledTimes(2);
+      });
     });
   });
 });
