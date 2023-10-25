@@ -175,7 +175,7 @@ describe("StepCascade", () => {
     });
     describe("recoverable error handling", () => {
       beforeEach(jest.clearAllMocks);
-      it("steps can provide a function that identifies recoverable errors", () => {
+      it("steps can provide a function that identifies recoverable errors", async () => {
         const recoverableThrowingStepSpy = jest.spyOn(
           RecoverableThrowingStep.prototype,
           "run"
@@ -187,11 +187,11 @@ describe("StepCascade", () => {
         }).rejects.toThrow();
         expect(recoverableThrowingStepSpy).toHaveBeenCalledTimes(2);
       });
-      it("the cascade can also provide a function that identifies recoverable errors", () => {
+      it("the cascade can also provide a function that identifies recoverable errors", async () => {
         const throwingStepSpy = jest.spyOn(ThrowingStep.prototype, "run");
 
         let i = 0;
-        const recover: TIdentifyRecoverableError = (error: any) => {
+        const recover: TIdentifyRecoverableError = () => {
           return i++ == 0;
         };
         cascade.setIdentifyRecoverableErrorFunction(recover);
@@ -203,15 +203,13 @@ describe("StepCascade", () => {
 
         expect(throwingStepSpy).toHaveBeenCalledTimes(2);
       });
-      it("the cascade can have a callback that gets called when an error is recoverable", () => {
+      it("the cascade can have a callback that gets called when an error is recoverable", async () => {
         let recoverCounter = 0;
-        const recoverableThrowingStepSpy = jest.spyOn(
-          RecoverableThrowingStep.prototype,
-          "run"
-        );
+        jest.spyOn(RecoverableThrowingStep.prototype, "run");
         cascade.addStep({ step: new RecoverableThrowingStep("Error") });
-        const recoverCallback: TRecoverableCallback = (error: any) => {
+        const recoverCallback: TRecoverableCallback = async () => {
           recoverCounter++;
+          return true;
         };
         cascade.setRecoverableCallback(recoverCallback);
 
