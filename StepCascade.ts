@@ -129,7 +129,7 @@ export default class StepCascade<T> {
           result = await step.run(this, result);
           shouldRepeat = false;
         } catch (error: any) {
-          const wrappedError = new StepError<T>(error.message, stepDescription);
+          const wrappedError = new StepError<T>(error.message, error, stepDescription);
           if (!this.identifyRecoverableError(wrappedError) && !step.identifyRecoverableError(wrappedError)) {
             throw wrappedError;
           }

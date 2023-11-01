@@ -8,10 +8,12 @@ import TStepDescription from "./TStepDescription";
  */
 export default class StepError<T> extends Error {
   stepDescription: TStepDescription<T>;
+  originalError: Error;
 
-  constructor(message: string, stepDescription: TStepDescription<T>) {
+  constructor(message: string, originalError: Error, stepDescription: TStepDescription<T>) {
     super(message);
     this.stepDescription = stepDescription;
+    this.originalError = originalError;
     Object.setPrototypeOf(this, StepError.prototype);
   }
 }
